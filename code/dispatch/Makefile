@@ -1,18 +1,16 @@
-NAME = scan
-
-MY_MODULES = keyboard.o ps2.o
+NAME = main
 
 CFLAGS = -I$(CS107E)/include -g -Wall -Og -std=c99 -ffreestanding -mapcs-frame -fno-omit-frame-pointer
 LDFLAGS = -nostdlib -T memmap -L$(CS107E)/lib
 LDLIBS = -lpi -lgcc
 
 
-all : $(NAME).bin $(MY_MODULES)
+all : $(NAME).bin
 
 %.bin: %.elf
 	arm-none-eabi-objcopy $< -O binary $@
 
-%.elf: %.o $(MY_MODULES)
+%.elf: %.o calc.o
 	arm-none-eabi-gcc $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 %.o: %.c

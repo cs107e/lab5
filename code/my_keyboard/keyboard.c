@@ -1,33 +1,20 @@
 #include "gpio.h"
-#include "gpioextra.h"
+#include "gpio_extra.h"
 #include "keyboard.h"
 #include "ps2.h"
 
-static unsigned int CLK, DATA;
+static ps2_device_t *dev;
 
-void keyboard_init(unsigned int clock_gpio, unsigned int data_gpio) 
+void keyboard_init(unsigned int clock_gpio, unsigned int data_gpio)
 {
-    CLK = clock_gpio;
-    gpio_set_input(CLK);
-    gpio_set_pullup(CLK); 
- 
-    DATA = data_gpio;
-    gpio_set_input(DATA);
-    gpio_set_pullup(DATA); 
+    // create new PS2 device
+    dev = ps2_new(clock_gpio, data_gpio);
 }
 
-static int read_bit(void) 
+unsigned char keyboard_read_scancode(void)
 {
-    // falling edge on clock triggers read 
-    // wait until clock reads high, then wait until clock reads low
-    // now read data
-    return -1; // TODO
-}
-
-unsigned char keyboard_read_scancode(void) 
-{
-    // TODO: Implement this function during lab5!
-    return 0xff;
+    // read from PS2 device
+    return ps2_read(dev);
 }
 
 key_action_t keyboard_read_sequence(void)
